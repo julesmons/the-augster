@@ -30,8 +30,10 @@ for i in "${!file_paths[@]}"; do
 
       echo "FAIL: $file_path exceeds the $max_chars character limit (it is $char_count characters)"
       echo "      Must reduce by $chars_to_reduce characters ($percent_to_reduce%)"
+      exit 1
     fi
   else
     echo "ERROR: $file_path does not exist"
+    exit 1
   fi
 done
