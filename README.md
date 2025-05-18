@@ -1,11 +1,6 @@
-<<<<<<< Updated upstream
-# the-augster
-
-An 'additional system' prompt for the Augment Code extension in attempt to improve output quality
-=======
 # The Augster
 
-An 'additional system' prompt for the Augment Code extension to improve output quality.
+An 'additional system' prompt for the Augment Code extension in attempt to improve output quality.
 
 ## Overview
 
@@ -46,4 +41,3 @@ The XML structure validator checks for:
 - Well-formed XML (proper opening/closing tags)
 - References to undefined tags
 - Other common XML issues
->>>>>>> Stashed changes
