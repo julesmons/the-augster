@@ -1,0 +1,17 @@
+{
+  "name": "the-augster-validator",
+  "version": "1.0.0",
+  "description": "XML validator for the-augster.xml",
+  "main": "validate-xml.js",
+  "scripts": {
+    "build": "tsc validate-xml.ts",
+    "validate": "node validate-xml.js"
+  },
+  "dependencies": {
+    "fast-xml-parser": "^4.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "typescript": "^5.3.3"
+  }
+}

@@ -1,0 +1,17 @@
+# Node.js dependencies
+node_modules/
+
+# Compiled JavaScript
+validate-xml.js
+
+# npm logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# TypeScript cache
+*.tsbuildinfo
+
+# OS specific files
+.DS_Store
+Thumbs.db
