@@ -56,16 +56,19 @@ The Augster's behavior is governed by a set of non-negotiable maxims. These repl
 ## Key Features
 
 1.  **Declarative XML Structure:** The prompt is defined in a structured XML format, providing clear, hierarchical instructions to the AI.
-2.  **Dual Workflows:**
+2.  **Triple Workflows:**
     -   **`Holistic` (Default):** A comprehensive, multi-stage workflow for any task involving code generation, modification, or complex analysis. It is mandatory and follows the strict stages outlined below.
     -   **`Express`:** A streamlined, adaptive workflow for simple, purely informational questions ("What is a decorator?") or trivial, non-integrating code edits. Its activation is explicitly announced (`[EXPRESS MODE ACTIVATED]`).
+    -   **`Orchestrator`:** A strategic coordination workflow for complex multi-component projects requiring task decomposition, delegation, and progress tracking. Focuses on planning and coordination rather than direct implementation. Its activation is explicitly announced (`[ORCHESTRATOR MODE ACTIVATED]`).
 3.  **`PROGRESS.md` Living Document:** For large tasks, the Augster creates and maintains a `PROGRESS.md` file in the project root. This acts as a state tracker and plan of record, mitigating context window limitations and enabling complex, multi-turn operations. It is automatically deleted upon task completion.
 4.  **Structured `Holistic` Workflow:** Execution is broken down into four distinct stages: Preliminary, Planning, Implementation, and Verification, with outputs clearly labeled with `##` headers.
 5.  **Formal `VerificationChecklist`:** After implementation, The Augster performs a rigorous self-audit against its core maxims and the plan. It reports a transparent `PASS`, `FAIL`, or `PARTIAL` status. A `FAIL` or `PARTIAL` result will trigger an autonomous new workflow cycle to address the remaining items.
 6.  **Standardized `ClarificationProtocol`:** A formal, templated mechanism for halting execution to request essential information from the user, ensuring it never proceeds on faulty assumptions.
 7.  **Favorite Heuristics (`SOLID`, `SMART`):** The Augster actively applies well-known software engineering and goal-setting heuristics in its work, particularly in planning (`SMART` decomposition) and implementation (`SOLID` principles).
 
-## Workflow Overview (`Holistic` Mode)
+## Workflow Overview
+
+### `Holistic` Mode (Default)
 
 Upon receiving a request deemed complex enough for `Holistic` mode, the Augster follows a strict, sequential process. The output is structured with the following Markdown headings:
 
@@ -98,6 +101,17 @@ Upon receiving a request deemed complex enough for `Holistic` mode, the Augster 
 -   **`## 11. Suggestions`**: (Optional) Presents valuable ideas, alternative approaches, or refactors that were identified but intentionally excluded from the implementation to adhere to `AppropriateComplexity`.
 -   **`## 12. Summary`**: A final, brief summary of the completed task and any notable resolutions for future reference.
 
+### `Orchestrator` Mode
+
+Upon receiving a request deemed suitable for `Orchestrator` mode (complex multi-component projects requiring coordination), the Augster follows a strategic coordination process inspired by Roo Code's Boomerang Tasks. The output is structured with the following Markdown headings:
+
+-   **`## 1. Mission`**: A concise summary of the Augster's understanding of the request's intent.
+-   **`## 2. Task Decomposition`**: A detailed breakdown of the mission into discrete, manageable subtasks with clear acceptance criteria and specialized mode assignments (Code, Architect, Debug, etc.).
+-   **`## 3. Context Documentation`**: Creation and maintenance of project context files to track progress and decisions across the workflow.
+-   **`## 4. Task Delegation`**: Simulated task delegation with detailed instructions for each subtask, specifying target mode, scope, requirements, context, and expected deliverables (similar to Roo Code's `new_task` tool).
+-   **`## 5. Task Integration`**: Simulated Boomerang Task completion tracking, status monitoring, and integration of results from completed subtasks (similar to Roo Code's `attempt_completion` tool).
+-   **`## 6. Mission Synthesis`**: Comprehensive summary of all subtask results and overall project completion with quality assurance review.
+
 ## Example Usages
 
 1.  **Simple Question:**
@@ -111,15 +125,26 @@ Upon receiving a request deemed complex enough for `Holistic` mode, the Augster 
         -   Implements the changes under `##8. Implementation`.
         -   Performs cleanup under `##9. Cleanup Actions`.
         -   Conducts the `AUGSTER: VERIFICATION` checklist.
-        -   Might add ideas to `##10. Suggestions`, like "Consider using a data validation library like Pydantic for more complex objects."
-        -   Concludes with `##11. Summary`.
+        -   Might add ideas to `##11. Suggestions`, like "Consider using a data validation library like Pydantic for more complex objects."
+        -   Concludes with `##12. Summary`.
+
+3.  **Complex Multi-Component Project:**
+    -   **User:** "Build a complete user authentication system with registration, login, password reset, and email verification features."
+    -   **The Augster:** `[ORCHESTRATOR MODE ACTIVATED]`
+        -   Analyzes the request and outputs `##1. Mission`.
+        -   Breaks down into subtasks with mode assignments like "Database schema design (Architect mode)", "API endpoint creation (Code mode)", "Email service integration (Code mode)", etc. in `##2. Task Decomposition`.
+        -   Creates context documentation in `##3. Context Documentation`.
+        -   Simulates task delegation with detailed instructions for each specialized mode in `##4. Task Delegation`.
+        -   Simulates Boomerang Task completion, tracks progress and integrates results in `##5. Task Integration`.
+        -   Synthesizes the complete solution with quality assurance in `##6. Mission Synthesis`.
 
 ## F.A.Q.
 
--   **Q: Why don't the numbered headings (`##1` to `##11`) always appear?**
-    -   **A:** This is by design. The Augster has two workflows:
-        -   **`Holistic`** is for complex tasks and *always* uses the full `##` heading structure.
-        -   **`Express`** is for simple questions. It's designed for speed and gives a direct answer. You'll see an `[EXPRESS MODE ACTIVATED]` message when it's used. This ensures you get quick answers for simple queries and a transparent, structured process for complex work.
+-   **Q: Why don't the numbered headings (`##1` to `##12`) always appear?**
+    -   **A:** This is by design. The Augster has three workflows:
+        -   **`Holistic`** is for complex tasks and *always* uses the full `##` heading structure (`##1` to `##12`).
+        -   **`Express`** is for simple questions. It's designed for speed and gives a direct answer. You'll see an `[EXPRESS MODE ACTIVATED]` message when it's used.
+        -   **`Orchestrator`** is for complex multi-component projects requiring coordination. It uses a specialized `##` heading structure (`##1` to `##6`) and you'll see an `[ORCHESTRATOR MODE ACTIVATED]` message when it's used. This mode simulates Roo Code's Boomerang Tasks workflow with task delegation and completion tracking. This ensures you get quick answers for simple queries, strategic coordination for complex projects, and a transparent, structured process for standard implementation work.
 
 -   **Q: A `PROGRESS.md` file was created in my project. What is it?**
     -   **A:** This is a "living document" or state file used by the Augster during large, complex tasks. It helps the AI keep track of the overall plan and its progress, which is crucial for tasks that generate a lot of output that might exceed its context window. The Augster will create, update, and **automatically delete this file** once the task is successfully completed. You can safely ignore it.
@@ -129,6 +154,9 @@ Upon receiving a request deemed complex enough for `Holistic` mode, the Augster 
 
 -   **Q: The Augster stopped and showed a "CLARIFICATION REQUIRED" block. Why?**
     -   **A:** This is the `ClarificationProtocol`. It's used only when the Augster hits a critical roadblock: a requirement is too ambiguous, essential information is missing and cannot be found with tools, or its planned path is fundamentally flawed. It's a safety mechanism to prevent it from making incorrect assumptions and wasting time building the wrong thing.
+
+-   **Q: How does Orchestrator mode relate to Roo Code's Boomerang Tasks?**
+    -   **A:** The Orchestrator mode is inspired by Roo Code's Boomerang Tasks workflow but adapted for the Augster's single-agent architecture. It simulates the task delegation (`new_task` tool) and completion tracking (`attempt_completion` tool) concepts through structured markdown output and specialized mode assignments. While it doesn't spawn actual separate agent instances like Roo Code, it provides the strategic planning, decomposition, and coordination benefits of the Orchestrator approach within the Augster's workflow-based system.
 
 ## Contributing & Feedback
 
