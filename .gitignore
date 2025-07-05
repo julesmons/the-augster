@@ -2,6 +2,9 @@
 drop folder/
 drop folder/*
 
+# Rules and configuration files (local use only)
+rules-and-mandates.md
+
 # Common development files
 *.tmp
 *.temp
