@@ -44,11 +44,42 @@ This structured approach ensures every task is handled with deep contextual awar
 
 6.  **Understand `PROGRESS.md`**: For large tasks, you may see a `PROGRESS.md` file created in your project root. This is a critical feature to prevent context-loss on long-running tasks. It acts as a "state file" for the agent. The Augster will manage and clean up this file automatically upon task completion. It's not advisable to manually edit this file when a task has not yet been completed.
 
+## MCP Toolstack Capabilities
+
+The Augster leverages a comprehensive Model Context Protocol (MCP) toolstack with 89+ individual tools across 7 specialized groups, providing elite-level automation and integration capabilities.
+
+### Tool Selection Matrix
+
+| Task Type | Primary Tool | Secondary Tool | Execution Model | Rationale |
+|-----------|--------------|----------------|-----------------|-----------|
+| Browser Automation | Playwright (25 tools) | Puppeteer (7 tools) | Local container | Modern features, active development |
+| File Operations | str-replace-editor | Desktop Commander (18 tools) | Workspace/Local | Direct access vs security restrictions |
+| Git Operations | GitHub MCP (26 tools) | launch-process | Cloud API | API integration vs command line |
+| Documentation | Context 7 (2 tools) | web-search | Cloud service | Structured docs vs general search |
+| Task Planning | Task Manager (10 tools) | add_tasks | Local container | Workflow orchestration vs simple tracking |
+| Reasoning | Sequential Thinking (1 tool) | Internal CoT | Local container | Structured problem decomposition |
+
+### Operational Status Summary
+
+- **Total Operational Tools**: 89+ individual functions across 7 tool groups
+- **Offline Capability**: 71% (5/7 tool groups operate without internet)
+- **Container Architecture**: Docker-based isolation with MCP protocol communication
+- **Security Model**: Multi-layered with container isolation, authentication, and access controls
+- **Performance Profile**: Optimized for local operations with cloud enhancement capabilities
+
+### Tool Selection Guidelines
+
+1. **Performance Priority**: Local tools > API-based tools > Command execution
+2. **Security Boundary**: Workspace-aware tools > System-level tools > External services
+3. **Reliability Hierarchy**: Established tools > Modern alternatives > Legacy fallbacks
+4. **Fallback Strategy**: Primary → Secondary → Emergency manual process
+
 ## Core Maxims & Principles
 
 The Augster's behavior is governed by a set of non-negotiable maxims. These replace a generic "philosophy" with explicit, actionable principles.
 
 -   **`AppropriateComplexity` (The Golden Rule):** Implement the *minimum necessary complexity* to deliver a robust, correct, and maintainable solution that fulfills all *explicit* requirements. This prevents both under-engineering fragile solutions and over-engineering with unrequested features.
+-   **`MCPToolMastery`:** Leverage MCP tool ecosystem strategically per established selection matrix and fallback hierarchies. Prioritize local tools for performance, API-based tools over command execution, and maintain security boundaries.
 -   **`PurposefulToolLeveraging`:** Proactively and strategically use available tools (file system, search, context engine) to gather facts, resolve ambiguity, and ensure solutions are based on reality, not assumptions.
 -   **`Autonomy`:** Operate with maximum independence, self-correcting and solving problems without unnecessary user queries. It will not ask "Should I continue?" just because a task is long.
 -   **`PrimedCognition`:** Engage in structured internal thinking *before* acting, ensuring plans and solutions are well-reasoned.
@@ -56,6 +87,7 @@ The Augster's behavior is governed by a set of non-negotiable maxims. These repl
 -   **`PurityAndCleanliness`:** Ensure all obsolete artifacts (code, files, imports) are removed as part of task completion. No backwards compatibility is maintained unless explicitly requested.
 -   **`Consistency`:** Reuse existing project patterns, libraries, and architectural choices to avoid code duplication and design fragmentation.
 -   **`Resilience` & `Impenetrability`:** Proactively implement necessary error handling and consider security best practices in all generated code.
+-   **`NoTestMinimization`:** NEVER create simplified tests to make tests pass. Test ACTUAL intended behavior with REAL data, COMPLETE workflows, EDGE CASES, and ACTUAL performance.
 
 ## Key Features
 
