@@ -1,0 +1,201 @@
+MCP tools:
+"
+Task Manager (10) tools
+npx -y @kazuph/mcp-taskmanager
+
+request_planning
+Register a new user request and plan its associated tasks. You must provide 'originalRequest' and 'tasks', and optionally 'splitDetails'. This tool initiates a new workflow for handling a user's request. The workflow is as follows: 1. Use 'request_planning' to register a request and its tasks. 2. After adding tasks, you MUST use 'get_next_task' to retrieve the first task. A progress table will be displayed. 3. Use 'get_next_task' to retrieve the next uncompleted task. 4. **IMPORTANT:** After marking a task as done, the assistant MUST NOT proceed to another task without the user's approval. The user must explicitly approve the completed task using 'approve_task_completion'. A progress table will be displayed before each approval request. 5. Once a task is approved, you can proceed to 'get_next_task' again to fetch the next pending task. 6. Repeat this cycle until all tasks are done. 7. After all tasks are completed (and approved), 'get_next_task' will indicate that all tasks are done and that the request awaits approval for full completion. 8. The user must then approve the entire request's completion using 'approve_request_completion'. If the user does not approve and wants more tasks, you can again use 'request_planning' to add new tasks and continue the cycle. The critical point is to always wait for user approval after completing each task and after all tasks are done, wait for request completion approval. Do not proceed automatically.
+get_next_task
+Given a 'requestId', return the next pending task (not done yet). If all tasks are completed, it will indicate that no more tasks are left and that you must wait for the request completion approval. A progress table showing the current status of all tasks will be displayed with each response. If the same task is returned again or if no new task is provided after a task was marked as done but not yet approved, you MUST NOT proceed. In such a scenario, you must prompt the user for approval via 'approve_task_completion' before calling 'get_next_task' again. Do not skip the user's approval step. In other words: - After calling 'mark_task_done', do not call 'get_next_task' again until 'approve_task_completion' is called by the user. - If 'get_next_task' returns 'all_tasks_done', it means all tasks have been completed. At this point, you must not start a new request or do anything else until the user decides to 'approve_request_completion' or possibly add more tasks via 'request_planning'.
+mark_task_done
+Mark a given task as done after you've completed it. Provide 'requestId' and 'taskId', and optionally 'completedDetails'. After marking a task as done, a progress table will be displayed showing the updated status of all tasks. After this, DO NOT proceed to 'get_next_task' again until the user has explicitly approved this completed task using 'approve_task_completion'.
+approve_task_completion
+Once the assistant has marked a task as done using 'mark_task_done', the user must call this tool to approve that the task is genuinely completed. Only after this approval can you proceed to 'get_next_task' to move on. A progress table will be displayed before requesting approval, showing the current status of all tasks. If the user does not approve, do not call 'get_next_task'. Instead, the user may request changes, or even re-plan tasks by using 'request_planning' again.
+approve_request_completion
+After all tasks are done and approved, this tool finalizes the entire request. The user must call this to confirm that the request is fully completed. A progress table showing the final status of all tasks will be displayed before requesting final approval. If not approved, the user can add new tasks using 'request_planning' and continue the process.
+open_task_details
+Get details of a specific task by 'taskId'. This is for inspecting task information at any point.
+list_requests
+List all requests with their basic information and summary of tasks. This provides a quick overview of all requests in the system.
+add_tasks_to_request
+Add new tasks to an existing request. This allows extending a request with additional tasks. A progress table will be displayed showing all tasks including the newly added ones.
+update_task
+Update an existing task's title and/or description. Only uncompleted tasks can be updated. A progress table will be displayed showing the updated task information.
+delete_task
+Delete a specific task from a request. Only uncompleted tasks can be deleted. A progress table will be displayed showing the remaining tasks after deletion.
+GitHub MCP (26) tools
+npx -y @modelcontextprotocol/server-github
+
+create_or_update_file
+Create or update a single file in a GitHub repository
+search_repositories
+Search for GitHub repositories
+create_repository
+Create a new GitHub repository in your account
+get_file_contents
+Get the contents of a file or directory from a GitHub repository
+push_files
+Push multiple files to a GitHub repository in a single commit
+create_issue
+Create a new issue in a GitHub repository
+create_pull_request
+Create a new pull request in a GitHub repository
+fork_repository
+Fork a GitHub repository to your account or specified organization
+create_branch
+Create a new branch in a GitHub repository
+list_commits
+Get list of commits of a branch in a GitHub repository
+list_issues
+List issues in a GitHub repository with filtering options
+update_issue
+Update an existing issue in a GitHub repository
+add_issue_comment
+Add a comment to an existing issue
+search_code
+Search for code across GitHub repositories
+search_issues
+Search for issues and pull requests across GitHub repositories
+search_users
+Search for users on GitHub
+get_issue
+Get details of a specific issue in a GitHub repository.
+get_pull_request
+Get details of a specific pull request
+list_pull_requests
+List and filter repository pull requests
+create_pull_request_review
+Create a review on a pull request
+merge_pull_request
+Merge a pull request
+get_pull_request_files
+Get the list of files changed in a pull request
+get_pull_request_status
+Get the combined status of all status checks for a pull request
+update_pull_request_branch
+Update a pull request branch with the latest changes from the base branch
+get_pull_request_comments
+Get the review comments on a pull request
+get_pull_request_reviews
+Get the reviews on a pull request
+puppeteer (7) tools
+npx -y @modelcontextprotocol/server-puppeteer
+
+puppeteer_navigate
+Navigate to a URL
+puppeteer_screenshot
+Take a screenshot of the current page or a specific element
+puppeteer_click
+Click an element on the page
+puppeteer_fill
+Fill out an input field
+puppeteer_select
+Select an element on the page with Select tag
+puppeteer_hover
+Hover an element on the page
+puppeteer_evaluate
+Execute JavaScript in the browser console
+Context 7 (2) tools
+npx -y @upstash/context7-mcp@latest
+
+resolve-library-id
+Resolves a package/product name to a Context7-compatible library ID and returns a list of matching libraries. You MUST call this function before 'get-library-docs' to obtain a valid Context7-compatible library ID UNLESS the user explicitly provides a library ID in the format '/org/project' or '/org/project/version' in their query. Selection Process: 1. Analyze the query to understand what library/package the user is looking for 2. Return the most relevant match based on: - Name similarity to the query (exact matches prioritized) - Description relevance to the query's intent - Documentation coverage (prioritize libraries with higher Code Snippet counts) - Trust score (consider libraries with scores of 7-10 more authoritative) Response Format: - Return the selected library ID in a clearly marked section - Provide a brief explanation for why this library was chosen - If multiple good matches exist, acknowledge this but proceed with the most relevant one - If no good matches exist, clearly state this and suggest query refinements For ambiguous queries, request clarification before proceeding with a best-guess match.
+get-library-docs
+Fetches up-to-date documentation for a library. You must call 'resolve-library-id' first to obtain the exact Context7-compatible library ID required to use this tool, UNLESS the user explicitly provides a library ID in the format '/org/project' or '/org/project/version' in their query.
+Playwright (25) tools
+npx -y @playwright/mcp@latest
+
+browser_close
+Close the page
+browser_resize
+Resize the browser window
+browser_console_messages
+Returns all console messages
+browser_handle_dialog
+Handle a dialog
+browser_file_upload
+Upload one or multiple files
+browser_install
+Install the browser specified in the config. Call this if you get an error about the browser not being installed.
+browser_press_key
+Press a key on the keyboard
+browser_navigate
+Navigate to a URL
+browser_navigate_back
+Go back to the previous page
+browser_navigate_forward
+Go forward to the next page
+browser_network_requests
+Returns all network requests since loading the page
+browser_pdf_save
+Save page as PDF
+browser_take_screenshot
+Take a screenshot of the current page. You can't perform actions based on the screenshot, use browser_snapshot for actions.
+browser_snapshot
+Capture accessibility snapshot of the current page, this is better than screenshot
+browser_click
+Perform click on a web page
+browser_drag
+Perform drag and drop between two elements
+browser_hover
+Hover over element on page
+browser_type
+Type text into editable element
+browser_select_option
+Select an option in a dropdown
+browser_tab_list
+List browser tabs
+browser_tab_new
+Open a new tab
+browser_tab_select
+Select a tab by index
+browser_tab_close
+Close a tab
+browser_generate_playwright_test
+Generate a Playwright test for given scenario
+browser_wait_for
+Wait for text to appear or disappear or a specified time to pass
+Desktop Commander (18) tools
+npx -y @wonderwhy-er/desktop-commander@latest
+
+get_config
+Get the complete server configuration as JSON. Config includes fields for: - blockedCommands (array of blocked shell commands) - defaultShell (shell to use for commands) - allowedDirectories (paths the server can access) - fileReadLineLimit (max lines for read_file, default 1000) - fileWriteLineLimit (max lines per write_file call, default 50) - telemetryEnabled (boolean for telemetry opt-in/out) - version (version of the DesktopCommander) This command can be referenced as "DC: ..." or "use Desktop Commander to ..." in your instructions.
+set_config_value
+Set a specific configuration value by key. WARNING: Should be used in a separate chat from file operations and command execution to prevent security issues. Config keys include: - blockedCommands (array) - defaultShell (string) - allowedDirectories (array of paths) - fileReadLineLimit (number, max lines for read_file) - fileWriteLineLimit (number, max lines per write_file call) - telemetryEnabled (boolean) IMPORTANT: Setting allowedDirectories to an empty array ([]) allows full access to the entire file system, regardless of the operating system. This command can be referenced as "DC: ..." or "use Desktop Commander to ..." in your instructions.
+read_file
+Read the contents of a file from the file system or a URL with optional offset and length parameters. Prefer this over 'execute_command' with cat/type for viewing files. Supports partial file reading with: - 'offset' (start line, default: 0) * Positive: Start from line N (0-based indexing) * Negative: Read last N lines from end (tail behavior) - 'length' (max lines to read, default: configurable via 'fileReadLineLimit' setting, initially 1000) * Used with positive offsets for range reading * Ignored when offset is negative (reads all requested tail lines) Examples: - offset: 0, length: 10 → First 10 lines - offset: 100, length: 5 → Lines 100-104 - offset: -20 → Last 20 lines - offset: -5, length: 10 → Last 5 lines (length ignored) Performance optimizations: - Large files with negative offsets use reverse reading for efficiency - Large files with deep positive offsets use byte estimation - Small files use fast readline streaming When reading from the file system, only works within allowed directories. Can fetch content from URLs when isUrl parameter is set to true (URLs are always read in full regardless of offset/length). Handles text files normally and image files are returned as viewable images. Recognized image types: PNG, JPEG, GIF, WebP. IMPORTANT: Always use absolute paths (starting with '/' or drive letter like 'C:\') for reliability. Relative paths may fail as they depend on the current working directory. Tilde paths (~/...) might not work in all contexts. Unless the user explicitly asks for relative paths, use absolute paths. This command can be referenced as "DC: ..." or "use Desktop Commander to ..." in your instructions.
+read_multiple_files
+Read the contents of multiple files simultaneously. Each file's content is returned with its path as a reference. Handles text files normally and renders images as viewable content. Recognized image types: PNG, JPEG, GIF, WebP. Failed reads for individual files won't stop the entire operation. Only works within allowed directories. IMPORTANT: Always use absolute paths (starting with '/' or drive letter like 'C:\') for reliability. Relative paths may fail as they depend on the current working directory. Tilde paths (~/...) might not work in all contexts. Unless the user explicitly asks for relative paths, use absolute paths. This command can be referenced as "DC: ..." or "use Desktop Commander to ..." in your instructions.
+write_file
+Write or append to file contents. 🎯 CHUNKING IS STANDARD PRACTICE: Always write files in chunks of 25-30 lines maximum. This is the normal, recommended way to write files - not an emergency measure. STANDARD PROCESS FOR ANY FILE: 1. FIRST → write_file(filePath, firstChunk, {mode: 'rewrite'}) [≤30 lines] 2. THEN → write_file(filePath, secondChunk, {mode: 'append'}) [≤30 lines] 3. CONTINUE → write_file(filePath, nextChunk, {mode: 'append'}) [≤30 lines] ⚠️ ALWAYS CHUNK PROACTIVELY - don't wait for performance warnings! WHEN TO CHUNK (always be proactive): 1. Any file expected to be longer than 25-30 lines 2. When writing multiple files in sequence 3. When creating documentation, code files, or configuration files HANDLING CONTINUATION ("Continue" prompts): If user asks to "Continue" after an incomplete operation: 1. Read the file to see what was successfully written 2. Continue writing ONLY the remaining content using {mode: 'append'} 3. Keep chunks to 25-30 lines each Files over 50 lines will generate performance notes but are still written successfully. Only works within allowed directories. IMPORTANT: Always use absolute paths (starting with '/' or drive letter like 'C:\') for reliability. Relative paths may fail as they depend on the current working directory. Tilde paths (~/...) might not work in all contexts. Unless the user explicitly asks for relative paths, use absolute paths. This command can be referenced as "DC: ..." or "use Desktop Commander to ..." in your instructions.
+create_directory
+Create a new directory or ensure a directory exists. Can create multiple nested directories in one operation. Only works within allowed directories. IMPORTANT: Always use absolute paths (starting with '/' or drive letter like 'C:\') for reliability. Relative paths may fail as they depend on the current working directory. Tilde paths (~/...) might not work in all contexts. Unless the user explicitly asks for relative paths, use absolute paths. This command can be referenced as "DC: ..." or "use Desktop Commander to ..." in your instructions.
+list_directory
+Get a detailed listing of all files and directories in a specified path. Use this instead of 'execute_command' with ls/dir commands. Results distinguish between files and directories with [FILE] and [DIR] prefixes. Only works within allowed directories. IMPORTANT: Always use absolute paths (starting with '/' or drive letter like 'C:\') for reliability. Relative paths may fail as they depend on the current working directory. Tilde paths (~/...) might not work in all contexts. Unless the user explicitly asks for relative paths, use absolute paths. This command can be referenced as "DC: ..." or "use Desktop Commander to ..." in your instructions.
+move_file
+Move or rename files and directories. Can move files between directories and rename them in a single operation. Both source and destination must be within allowed directories. IMPORTANT: Always use absolute paths (starting with '/' or drive letter like 'C:\') for reliability. Relative paths may fail as they depend on the current working directory. Tilde paths (~/...) might not work in all contexts. Unless the user explicitly asks for relative paths, use absolute paths. This command can be referenced as "DC: ..." or "use Desktop Commander to ..." in your instructions.
+search_files
+Finds files by name using a case-insensitive substring matching. Use this instead of 'execute_command' with find/dir/ls for locating files. Searches through all subdirectories from the starting path. Has a default timeout of 30 seconds which can be customized using the timeoutMs parameter. Only searches within allowed directories. IMPORTANT: Always use absolute paths (starting with '/' or drive letter like 'C:\') for reliability. Relative paths may fail as they depend on the current working directory. Tilde paths (~/...) might not work in all contexts. Unless the user explicitly asks for relative paths, use absolute paths. This command can be referenced as "DC: ..." or "use Desktop Commander to ..." in your instructions.
+search_code
+Search for text/code patterns within file contents using ripgrep. Use this instead of 'execute_command' with grep/find for searching code content. Fast and powerful search similar to VS Code search functionality. Supports regular expressions, file pattern filtering, and context lines. Has a default timeout of 30 seconds which can be customized. Only searches within allowed directories. IMPORTANT: Always use absolute paths (starting with '/' or drive letter like 'C:\') for reliability. Relative paths may fail as they depend on the current working directory. Tilde paths (~/...) might not work in all contexts. Unless the user explicitly asks for relative paths, use absolute paths. This command can be referenced as "DC: ..." or "use Desktop Commander to ..." in your instructions.
+get_file_info
+Retrieve detailed metadata about a file or directory including: - size - creation time - last modified time - permissions - type - lineCount (for text files) - lastLine (zero-indexed number of last line, for text files) - appendPosition (line number for appending, for text files) Only works within allowed directories. IMPORTANT: Always use absolute paths (starting with '/' or drive letter like 'C:\') for reliability. Relative paths may fail as they depend on the current working directory. Tilde paths (~/...) might not work in all contexts. Unless the user explicitly asks for relative paths, use absolute paths. This command can be referenced as "DC: ..." or "use Desktop Commander to ..." in your instructions.
+edit_block
+Apply surgical text replacements to files. BEST PRACTICE: Make multiple small, focused edits rather than one large edit. Each edit_block call should change only what needs to be changed - include just enough context to uniquely identify the text being modified. Takes: - file_path: Path to the file to edit - old_string: Text to replace - new_string: Replacement text - expected_replacements: Optional parameter for number of replacements By default, replaces only ONE occurrence of the search text. To replace multiple occurrences, provide the expected_replacements parameter with the exact number of matches expected. UNIQUENESS REQUIREMENT: When expected_replacements=1 (default), include the minimal amount of context necessary (typically 1-3 lines) before and after the change point, with exact whitespace and indentation. When editing multiple sections, make separate edit_block calls for each distinct change rather than one large replacement. When a close but non-exact match is found, a character-level diff is shown in the format: common_prefix{-removed-}{+added+}common_suffix to help you identify what's different. Similar to write_file, there is a configurable line limit (fileWriteLineLimit) that warns if the edited file exceeds this limit. If this happens, consider breaking your edits into smaller, more focused changes. IMPORTANT: Always use absolute paths (starting with '/' or drive letter like 'C:\') for reliability. Relative paths may fail as they depend on the current working directory. Tilde paths (~/...) might not work in all contexts. Unless the user explicitly asks for relative paths, use absolute paths. This command can be referenced as "DC: ..." or "use Desktop Commander to ..." in your instructions.
+execute_command
+Execute a terminal command with timeout. Command will continue running in background if it doesn't complete within timeout. NOTE: For file operations, prefer specialized tools like read_file, search_code, list_directory instead of cat, grep, or ls commands. IMPORTANT: Always use absolute paths (starting with '/' or drive letter like 'C:\') for reliability. Relative paths may fail as they depend on the current working directory. Tilde paths (~/...) might not work in all contexts. Unless the user explicitly asks for relative paths, use absolute paths. This command can be referenced as "DC: ..." or "use Desktop Commander to ..." in your instructions.
+read_output
+Read new output from a running terminal session. Set timeout_ms for long running commands. This command can be referenced as "DC: ..." or "use Desktop Commander to ..." in your instructions.
+force_terminate
+Force terminate a running terminal session. This command can be referenced as "DC: ..." or "use Desktop Commander to ..." in your instructions.
+list_sessions
+List all active terminal sessions. This command can be referenced as "DC: ..." or "use Desktop Commander to ..." in your instructions.
+list_processes
+List all running processes. Returns process information including PID, command name, CPU usage, and memory usage. This command can be referenced as "DC: ..." or "use Desktop Commander to ..." in your instructions.
+kill_process
+Terminate a running process by PID. Use with caution as this will forcefully terminate the specified process. This command can be referenced as "DC: ..." or "use Desktop Commander to ..." in your instructions.
+Sequential thinking (1) tools
+npx -y @modelcontextprotocol/server-sequential-thinking
+
+sequentialthinking
+A detailed tool for dynamic and reflective problem-solving through thoughts. This tool helps analyze problems through a flexible thinking process that can adapt and evolve. Each thought can build on, question, or revise previous insights as understanding deepens. When to use this tool: - Breaking down complex problems into steps - Planning and design with room for revision - Analysis that might need course correction - Problems where the full scope might not be clear initially - Problems that require a multi-step solution - Tasks that need to maintain context over multiple steps - Situations where irrelevant information needs to be filtered out Key features: - You can adjust total_thoughts up or down as you progress - You can question or revise previous thoughts - You can add more thoughts even after reaching what seemed like the end - You can express uncertainty and explore alternative approaches - Not every thought needs to build linearly - you can branch or backtrack - Generates a solution hypothesis - Verifies the hypothesis based on the Chain of Thought steps - Repeats the process until satisfied - Provides a correct answer Parameters explained: - thought: Your current thinking step, which can include: * Regular analytical steps * Revisions of previous thoughts * Questions about previous decisions * Realizations about needing more analysis * Changes in approach * Hypothesis generation * Hypothesis verification - next_thought_needed: True if you need more thinking, even if at what seemed like the end - thought_number: Current number in sequence (can go beyond initial total if needed) - total_thoughts: Current estimate of thoughts needed (can be adjusted up/down) - is_revision: A boolean indicating if this thought revises previous thinking - revises_thought: If is_revision is true, which thought number is being reconsidered - branch_from_thought: If branching, which thought number is the branching point - branch_id: Identifier for the current branch (if any) - needs_more_thoughts: If reaching end but realizing more thoughts needed You should: 1. Start with an initial estimate of needed thoughts, but be ready to adjust 2. Feel free to question or revise previous thoughts 3. Don't hesitate to add more thoughts if needed, even at the "end" 4. Express uncertainty when present 5. Mark thoughts that revise previous thinking or branch into new paths 6. Ignore information that is irrelevant to the current step 7. Generate a solution hypothesis when appropriate 8. Verify the hypothesis based on the Chain of Thought steps 9. Repeat the process until satisfied with the solution 10. Provide a single, ideally correct answer as the final output 11. Only set next_thought_needed to false when truly done and a satisfactory answer is reached

@@ -1,0 +1,52 @@
+# Archive folder for old development artifacts
+archive/
+archive/*
+
+# Drop folder (underscore version) for reference materials and staging
+drop_folder/
+drop_folder/*
+
+# Rules and configuration files (local use only)
+rules-and-mandates.md
+
+# Common development files
+*.tmp
+*.temp
+*.log
+*.bak
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Node modules (if any)
+node_modules/
+
+# Python cache (if any)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+
+# Temporary working files
+*.draft
+*.working
+*.backup
