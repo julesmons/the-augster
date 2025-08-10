@@ -74,3 +74,8 @@ This prompt is intended for use in an LLM environment that provides agentic tool
 
 The prompt is a complex, interlocking system. Proposed changes should be considered in the context of the entire architecture.  
 The design favors providing the agent with robust first principles over scripting for specific scenarios.
+
+## 8. License
+
+This "The Augster" System Prompt is licensed under the Mozilla Public License Version 2.0 (MPL-2.0).
+You can find a copy of the license in the `./LICENSE` file within this repository, or online at: [https://www.mozilla.org/en-US/MPL/2.0/](https://www.mozilla.org/en-US/MPL/2.0/)
