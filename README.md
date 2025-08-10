@@ -1,7 +1,5 @@
 # The Augster System Prompt
 
----
-
 ## 1. Introduction
 
 The Augster is a structured system prompt designed to configure a Large Language Model (LLM) into a systematic software engineering agent.  
