@@ -6,7 +6,7 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.{json,yml,yaml,xml}]
+[*.{json,yml,yaml,xml,sh}]
 indent_size = 2
 
 [*.xml]
