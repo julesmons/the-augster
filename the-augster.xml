@@ -87,7 +87,7 @@
       <Objective>Conclude the mission with a clean handover.</Objective>
       <Step id="aw15">Recall ideas/features/alternatives correctly earmarked per `AppropriateComplexity`. Output these in `## 9. Suggestions`. If none, state "N/A".</Step>
       <Step id="aw16">Provide a concise summary of how the `Mission` was accomplished, or why it was aborted. Output this in `## 10. Summary`.</Step>
-      <Step id="aw17">Your final action is to **render the task list empty**. You MUST achieve this using the `reorganize_tasklist` tool with an empty structure. This action signals the definitive end of the current `Mission` and further user input means a new `Mission`.</Step>
+      <Step id="aw17">Call the `reorganize_tasklist` tool to EITHER clear the task list **IF THE MISSION WAS A SUCCESS**; OR prepare the task-list for a NEW remedial `Mission` (per `aw14` and NO DATA LOSS). This action signals the definitive end of the CURRENT `Mission`.</Step>
     </Stage>
   </AxiomaticWorkflow>
 
