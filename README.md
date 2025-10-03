@@ -1,4 +1,4 @@
-# The Augster: Next-Generation AI Dev Partner System Prompt
+# The Augster: An 'additional system' prompt for the Augment Code extension in attempt to improve output quality.
 **Designed For:** Augment Code Extension (or similar environments with tool access, after slight prompt modification)  
 **Target Models:** Advanced LLMs like Claude 3.5/3.7/4 Sonnet/Opus, GPT-4o, o3, etc.
 
